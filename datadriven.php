@@ -660,7 +660,7 @@ function ddlib_editarCampo ( &$dd, &$aDatos, $id ) {
 		     		foreach ( $dd["campos"] as $tcampo=>$tipo ){
 		     			$atributos = ( $aDatos[$tcampo] ? " checked='checked' ": "") ;
 		     			$atributos .= " name='$tcampo' id='$id-$nCont' {$dd[atributos]} value='1'";
-		     			$cRet .= "<input type='checkbox' $atributos> ";
+		     			$cRet .= "<input type='checkbox' $atributos /> ";
 		     			$cRet .= "<label for='$id-$nCont'>".  $dd["etiquetas"][$tcampo]. "</label> \n";
 		     			$nCont++;
 		     		}
@@ -676,7 +676,7 @@ function ddlib_editarCampo ( &$dd, &$aDatos, $id ) {
            $campo = ($tipo=="infofijo" ? substr( $dd["tipo"],9 ) : call_user_func($aParametros[1], $aDatos));
        case "readonly":
        case "info":
-           return "<input type='text' $atributos value='$campo' disabled='disabled' >";
+           return "<input type='text' $atributos value='$campo' disabled='disabled' />";
            break;
 
        case "htmlfijo":
@@ -691,7 +691,7 @@ function ddlib_editarCampo ( &$dd, &$aDatos, $id ) {
        case "verificapassword":
            $size =  $aParametros[1] or $size=40;
            $max  =  $aParametros[2] or $max= $size;
-           return "<input type='password' value='' $atributos size='$size' maxlength='$max'>";
+           return "<input type='password' value='' $atributos size='$size' maxlength='$max' />";
            
        // textos y cadenas
        case "texto":
@@ -702,7 +702,7 @@ function ddlib_editarCampo ( &$dd, &$aDatos, $id ) {
        case "cadena":
            $size =  $aParametros[1] or $size=40;
            $max  =  $aParametros[2] or $max=$size;
-           return "<input type='text' $atributos value='$campo' size='$size' maxlenght='$max' />";
+           return "<input type='text' $atributos value='$campo' size='$size' maxlength='$max' />";
 		 // los campos fecha se generan mediante el atributo.
        
        default:
