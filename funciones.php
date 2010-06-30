@@ -4,9 +4,11 @@
   *
   * Librería general de funciones.
   * @author Roger
-  * @version 2010-04-30
+  * @version 2010-05-21
   * @licence GPL
 
+  * 2010/06/29 + mensajeHTML
+  * 2010/06/28 corregido mimplode
   * 2010/05/21 correciones en mysql_template : /uims
   * 2010/05/19 ereg sustituido por preg_match
   * 2010/05/11 mprint tiene un 3º parametros opcional HTML=true
@@ -459,6 +461,11 @@ function paginaHTML($cMensaje, $title='ERROR', $css=''){
           "<body>$cMensaje</body></html>";
 }
 
+function mensajeHTML ( $texto, $tipo="OK" ) {
+   return  "\n<div class='mensaje-{$tipo}'>$texto</div>\n";                         
+}
+
+
 /** 
 *
 *    F U N C I O N E S      DE      C A D E N A
@@ -524,10 +531,11 @@ function lista(){
 
 function mimplode ($patron, $array, $separador = "") {
 
-    foreach ($array as $elemento) {
-        $cRet .= $sep.sprintf($patron, $elemento);
+    foreach ($array as $k=>$valor) {
+        $cRet .= $sep . sprintf($patron, $k, $valor);
         $sep = $separador;
     }
+    
     return $cRet;
 }
 

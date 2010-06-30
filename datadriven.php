@@ -4,11 +4,12 @@
  *
  * Librería data-driven para gestionar y editar datos
  * Cambiada para gestión con el maquetador
- * @version 2010-06-10
+ * @version 2010-06-13
  * @author  Roger
  * @todo Borrar imagenes y adjuntos.
  *  
  * Correcciones
+ * 20010/06/29 + ddlib_salvar. Como el guardar, pero con un orden lógico de argumentos.
  * 2010/06/13 Corregido: ddlib_consulta al manejar dd con campos sin acceso, calculaba
  *             mal la cabecera y no se ordenaba. 
  * 2010/06/02 Corregido: opcionId, opcionID ahoa son opcionesID (por coherencia )
@@ -448,7 +449,7 @@ function ddlib_consulta ( $aCampos,  $cSQL, $aOpciones=""  ){
             }
         }
         // TODO REVISAR.       
-        $cSQL = "SELECT " . implode(",",$campos) . (stripos($cSQL,"FROM ")===0 ?  " " . $cSQL : " FROM $cSQL");                
+        $cSQL = "SELECT " . implode(",",$campos) . (stripos($cSQL,"FROM ")===0 ?  " " . $cSQL : " FROM $cSQL");                                
     }
     
     if ( stripos ( $cSQL, "order by") ){// NO PUEDE SER cero
@@ -660,7 +661,7 @@ function ddlib_editarCampo ( &$dd, &$aDatos, $id ) {
 		     		foreach ( $dd["campos"] as $tcampo=>$tipo ){
 		     			$atributos = ( $aDatos[$tcampo] ? " checked='checked' ": "") ;
 		     			$atributos .= " name='$tcampo' id='$id-$nCont' {$dd[atributos]} value='1'";
-		     			$cRet .= "<input type='checkbox' $atributos /> ";
+		     			$cRet .= "<input type='checkbox' $atributos> ";
 		     			$cRet .= "<label for='$id-$nCont'>".  $dd["etiquetas"][$tcampo]. "</label> \n";
 		     			$nCont++;
 		     		}
@@ -676,7 +677,7 @@ function ddlib_editarCampo ( &$dd, &$aDatos, $id ) {
            $campo = ($tipo=="infofijo" ? substr( $dd["tipo"],9 ) : call_user_func($aParametros[1], $aDatos));
        case "readonly":
        case "info":
-           return "<input type='text' $atributos value='$campo' disabled='disabled' />";
+           return "<input type='text' $atributos value='$campo' disabled='disabled' >";
            break;
 
        case "htmlfijo":
@@ -691,7 +692,7 @@ function ddlib_editarCampo ( &$dd, &$aDatos, $id ) {
        case "verificapassword":
            $size =  $aParametros[1] or $size=40;
            $max  =  $aParametros[2] or $max= $size;
-           return "<input type='password' value='' $atributos size='$size' maxlength='$max' />";
+           return "<input type='password' value='' $atributos size='$size' maxlength='$max'>";
            
        // textos y cadenas
        case "texto":
@@ -702,7 +703,7 @@ function ddlib_editarCampo ( &$dd, &$aDatos, $id ) {
        case "cadena":
            $size =  $aParametros[1] or $size=40;
            $max  =  $aParametros[2] or $max=$size;
-           return "<input type='text' $atributos value='$campo' size='$size' maxlength='$max' />";
+           return "<input type='text' $atributos value='$campo' size='$size' maxlenght='$max' />";
 		 // los campos fecha se generan mediante el atributo.
        
        default:
@@ -1022,6 +1023,11 @@ function dd1_verificaCampo( $aDatos ){
  * Función que construye la SQL para insertar o actualizar los datos y los guarda.
 */
 
+function ddlib_salvar( $dd, $cTabla, $cWhere="",$aOpciones= NULL ){
+	return ddlib_guardar ( $cTabla, $cWhere, $dd, $aOpciones);
+}
+
+
 function ddlib_guardar ( $cTabla, $cWhere, $aEdicion, $aOpciones = NULL ){
    $cError= "";
    $aRet  = "";
@@ -1037,7 +1043,7 @@ function ddlib_guardar ( $cTabla, $cWhere, $aEdicion, $aOpciones = NULL ){
       if ( isset( $aOpciones["errorverificacion"])  ){
 			$cError =  $aOpciones["errorverificacion"] . $cError;     
       }
-      return mensajes ( $cError, "error-" . ($cNuevo ? "añadir" : "guardar") ) ;	   
+      return mensajeHTML ( $cError, "error " . ($cNuevo ? "añadir" : "guardar") ) ;	   
    }
    
    $aSQL = sql_crear( $cNuevo, $cTabla, $cWhere );
@@ -1063,7 +1069,7 @@ function ddlib_guardar ( $cTabla, $cWhere, $aEdicion, $aOpciones = NULL ){
 		   case "adjunto":		         		
    		case "imagen" :
    		case "irudia" :   
-            if ( $_REQUEST[ $aDatos["campo"]."_BORRAR"]=='1' || $_REQUEST[ $aDatos["campo"]."_EZABATU"]=='1' ){
+            if ( $_REQUEST[ $aDatos["campo"]."_BORRAR"]=='1' || $_REQUEST[ $aDatos["campo"]."_EZABATU"]=='1' ){                                            
                sql_add($aSQL,  $aDatos["campo"], "", "cadena");               
             } else {   		
 				   $lPendiente = true;
@@ -1123,7 +1129,7 @@ function ddlib_guardar ( $cTabla, $cWhere, $aEdicion, $aOpciones = NULL ){
    // si hemos recogido campos, salvamos (puede ser un caso de solo imágenes )
 	if ( sql_esvacia($aSQL) ) {
       $lResul = true ;
-	} else {	   	   
+	} else {
 	   $lResul = mysql_query( sql_sql ( $aSQL ) );   		    	
    }	   
 
