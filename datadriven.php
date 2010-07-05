@@ -447,8 +447,7 @@ function ddlib_consulta ( $aCampos,  $cSQL, $aOpciones=""  ){
             } elseif ( isset($dd["campos"])) {
                 $campos= array_merge($campos,$dd["campos"]);
             }
-        }
-        // TODO REVISAR.       
+        }       
         $cSQL = "SELECT " . implode(",",$campos) . (stripos($cSQL,"FROM ")===0 ?  " " . $cSQL : " FROM $cSQL");                                
     }
     

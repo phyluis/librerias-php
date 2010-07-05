@@ -7,6 +7,7 @@
   * @version 2010-05-21
   * @licence GPL
 
+  * 2010/06/20 + js_confirm
   * 2010/06/29 + mensajeHTML
   * 2010/06/28 corregido mimplode
   * 2010/05/21 correciones en mysql_template : /uims
@@ -61,6 +62,11 @@
   * 2006-02-16 + fecha_mysql_php 
   *            + fecha_php_mysql
  */
+
+
+function js_confirm ($texto) {
+   return " onclick=\"return confirm('$texto');\" ";
+}
 
 
 /*
