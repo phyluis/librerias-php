@@ -4,12 +4,14 @@
  *
  * Librería data-driven para gestionar y editar datos
  * Cambiada para gestión con el maquetador
+ * @version 2010-07-13 
  * @version 2010-06-13
  * @author  Roger
  * @todo Borrar imagenes y adjuntos.
  *  
  * Correcciones
- * 20010/06/29 + ddlib_salvar. Como el guardar, pero con un orden lógico de argumentos.
+ * 2010/07/12 corregido ddlib_consulta, cuando el order era 0 podia coger el orden por defecto.
+ * 2010/06/29 + ddlib_salvar. Como el guardar, pero con un orden lógico de argumentos.
  * 2010/06/13 Corregido: ddlib_consulta al manejar dd con campos sin acceso, calculaba
  *             mal la cabecera y no se ordenaba. 
  * 2010/06/02 Corregido: opcionId, opcionID ahoa son opcionesID (por coherencia )
@@ -431,8 +433,8 @@ function ddlib_consulta ( $aCampos,  $cSQL, $aOpciones=""  ){
 
 
     // Ordenar los campos
-    global $aEstado;
-    $order   = por_defecto ($aEstado["order"]  , $aOpciones["order"], 0 );
+    global $aEstado;    
+    $order   = ( isset($_REQUEST["order"])  ? $aEstado["order"] : por_defecto ($aOpciones["order"], 0 )  );
     $orderby = por_defecto ($aEstado["orderby"], $aOpciones["orderby"], "ASC");
     // completar SELECT
     if ( stripos($cSQL,"SELECT ")!== 0 ){

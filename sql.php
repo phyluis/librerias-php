@@ -3,8 +3,9 @@
 /**
  * funciones SQL para construir clausulas.
  *
- * @version: 2010/05/28
-*    2010/05/28 sql_codifica ya no se corrigen las fechas. Deben estar en YYYY/mm/dd
+ * @version: 2010/07/13
+ *   2010/07/13 sql_order corregido para admitir campos tipo CONVERT(a,b).
+ *   2010/05/28 sql_codifica ya no se corrigen las fechas. Deben estar en YYYY/mm/dd
  *   2010/05/13 sql_add con cadena por defecto
  *   2008/02/13 ampliado sql_junta
  *   2006/06/30 Añadido sql_esvacia
@@ -48,10 +49,10 @@ return  $sql_parentesis;
 
 
 /**
-*
-* FUNCIONES PARA CREAR SENTENCIAS INSERT Y UPDATE
-*
-*/
+ *
+ * FUNCIONES PARA CREAR SENTENCIAS INSERT Y UPDATE
+ *
+ */
 
 
 
@@ -138,12 +139,23 @@ function sql_sql( $aReg ){
 }
 
 
+/**
+ * Añade el order (ASC/DESC) a una lista campos contenidos en la clausula, además
+ * de añadir el literal "order by"
+ * @param $campos cadena con campos "campo1[,campo2]"
+ * @param $order cadena ASC|DESC|vacia
+ */
 function sql_order ( $campos, $order ) {
    $aCampos = explode ("," ,$campos);
    $cTemp = "";
+   $parentesis=0;
    foreach ( $aCampos as $id =>$campo) {
-      if ($campo!="")
-         $cTemp .= ( $cTemp=="" ? "": ",") . "$campo $order";
+      if ($campo!="") {
+         $parentesis += substr_count($campo,"(")  - substr_count($campo,")");           
+         $cTemp .= ( $cTemp=="" ? "": ",") . "$campo ". ( !$parentesis ? $order : "")  ;        
+      }
    }
    return ($cTemp=="" ? "" :" order by $cTemp");
 }
+
+
