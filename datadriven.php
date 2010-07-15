@@ -4,12 +4,12 @@
  *
  * Librería data-driven para gestionar y editar datos
  * Cambiada para gestión con el maquetador
- * @version 2010-07-13 
- * @version 2010-06-13
+ * @version 2010-07-15 
  * @author  Roger
  * @todo Borrar imagenes y adjuntos.
  *  
  * Correcciones
+ * 2010/07/15 ddlib_edicion admite ahora la opcion "siguienteAccion" equivalente de "hidden"
  * 2010/07/12 corregido ddlib_consulta, cuando el order era 0 podia coger el orden por defecto.
  * 2010/06/29 + ddlib_salvar. Como el guardar, pero con un orden lógico de argumentos.
  * 2010/06/13 Corregido: ddlib_consulta al manejar dd con campos sin acceso, calculaba
@@ -796,6 +796,16 @@ if ( isset($aOpciones["hidden"]) ) {
 		$cHidden .= "<input type='hidden' name='$name' value='$value' />\n";
 	}
 }
+
+if ( isset($aOpciones["siguienteAccion"]) ) {
+   $temp= $aOpciones["siguienteAccion"];
+  	$cHidden .= "<input type='hidden' name='c' value='{$temp[0]}' />\n";
+	$cHidden .= "<input type='hidden' name='a' value='{$temp[1]}' />\n";
+	if ( isset($temp[2]) ) { 
+	   $cHidden .= "<input type='hidden' name='i' value='{$temp[2]}' />\n";
+	}
+}
+
 
 
 // se revisan los campos para ver ocultos, obligatorios y demás
